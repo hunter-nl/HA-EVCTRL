@@ -2,6 +2,7 @@
   "domain": "ha_evctrl",
   "name": "HA EV Control",
   "version": "1.0.1",
+  "codeowners": ["@hunter-nl"],
   "config_flow": true,
   "icon": "mdi:car-electric",
   "documentation": "https://github.com/hunter-nl/HA-EVCTRL",
