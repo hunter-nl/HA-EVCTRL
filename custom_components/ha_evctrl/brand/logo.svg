@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="512" viewBox="0 0 1200 512" role="img" aria-labelledby="title">
+  <title>HA EV Control</title>
+  <rect width="1200" height="512" rx="72" fill="#0d2638"/>
+  <g transform="translate(0 0)">
+    <path d="M104 326c0-61 29-108 86-108h72c57 0 86 47 86 108v39H104z" fill="#1f9a8a"/>
+    <path d="M174 218l22-67h120l22 67" fill="none" stroke="#d9fbf5" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M208 151l16-40h64l16 40" fill="none" stroke="#f8cf5a" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="184" cy="333" r="26" fill="#0d2638" stroke="#d9fbf5" stroke-width="12"/>
+    <circle cx="328" cy="333" r="26" fill="#0d2638" stroke="#d9fbf5" stroke-width="12"/>
+    <path d="M252 243l-32 59h28l-12 55 54-72h-29l20-42z" fill="#f8cf5a"/>
+    <path d="M120 385h272" stroke="#d9fbf5" stroke-width="12" stroke-linecap="round"/>
+  </g>
+  <text x="430" y="235" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="700">HA EV Control</text>
+  <text x="430" y="310" fill="#d9fbf5" font-family="Arial, Helvetica, sans-serif" font-size="34">Local EV, charger and P1 telemetry</text>
+</svg>

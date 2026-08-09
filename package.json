@@ -1,0 +1,8 @@
+{
+  "name": "ha-evctrl",
+  "displayName": "Home Assistant EVCTRL",
+  "version": "1.0.0",
+  "description": "Home Assistant integration for EV & P1 controller.",
+  "license": "AGPL-3.0-only",
+  "author": "@hunter-nl"
+}
