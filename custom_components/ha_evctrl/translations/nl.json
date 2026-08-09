@@ -1,0 +1,31 @@
+{
+  "title": "HA EV Control",
+  "config": {
+    "step": {
+      "user": {
+        "title": "HA EV Control configureren",
+        "description": "Geef het ESP32-WebSocket- of Server-Sent Events-eindpunt (SSE) op en pas indien nodig het opnieuw verbinden en de sensornamen aan.",
+        "data": {
+          "websocket_url": "Streaming-URL",
+          "reconnect_interval": "Interval voor opnieuw verbinden (seconden)",
+          "sensor_prefix": "Sensorvoorvoegsel"
+        }
+      }
+    },
+    "error": {
+      "invalid_stream_url": "Voer een absolute http(s)- of ws(s)-streaming-URL in."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "websocket_url": "Streaming-URL",
+          "sensor_prefix": "Sensorvoorvoegsel",
+          "reconnect_interval": "Interval voor opnieuw verbinden (seconden)",
+          "payload_log_level": "Payload-logniveau"
+        }
+      }
+    }
+  }
+}
