@@ -9,11 +9,11 @@
           "websocket_url": "Streaming URL",
           "reconnect_interval": "Reconnect interval (seconds)",
           "sensor_prefix": "Sensor prefix"
-        },
-        "error": {
-          "invalid_stream_url": "Enter an absolute http(s) or ws(s) streaming URL."
         }
       }
+    },
+    "error": {
+      "invalid_stream_url": "Enter an absolute http(s) or ws(s) streaming URL."
     }
   },
   "options": {
@@ -24,15 +24,6 @@
           "sensor_prefix": "Sensor prefix",
           "reconnect_interval": "Reconnect interval (seconds)",
           "payload_log_level": "Payload log level"
-        }
-      }
-    },
-    "selector": {
-      "payload_log_level": {
-        "options": {
-          "off": "Off",
-          "info": "Info",
-          "debug": "Debug"
         }
       }
     }
