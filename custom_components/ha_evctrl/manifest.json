@@ -1,10 +1,13 @@
 {
   "domain": "ha_evctrl",
   "name": "HA EV Control",
-  "version": "1.0.1",
+  "after_dependencies": [],
   "codeowners": ["@hunter-nl"],
   "config_flow": true,
-  "icon": "mdi:car-electric",
   "documentation": "https://github.com/hunter-nl/HA-EVCTRL",
-  "iot_class": "local_push"
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/hunter-nl/HA-EVCTRL/issues",
+  "requirements": [],
+  "version": "1.0.1"
 }
