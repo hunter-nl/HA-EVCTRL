@@ -15,7 +15,7 @@
 [validate-url]: https://github.com/hunter-nl/HA-EVCTRL/actions/workflows/validate.yaml
 [ci-badge]: https://img.shields.io/github/actions/workflow/status/hunter-nl/HA-EVCTRL/ci.yaml?label=CI
 [ci-url]: https://github.com/hunter-nl/HA-EVCTRL/actions/workflows/ci.yaml
-[license-badge]: https://img.shields.io/github/license/hunter-nl/HA-EVCTRL?color=blue
+[license-badge]: https://img.shields.io/github/license/hunter-nl/HA-EVCTRL.svg?color=blue
 [license-url]: https://github.com/hunter-nl/HA-EVCTRL/blob/main/LICENSE
 [ha-badge]: https://img.shields.io/badge/Home--Assistant-2026.7.0%2B-green?logo=homeassistant
 [ha-url]: https://www.home-assistant.io/
