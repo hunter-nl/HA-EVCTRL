@@ -133,12 +133,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("CurrentL1", "value"),
         unit_path=("CurrentL1", "unit"),
-        key_paths=(
-            ("CurrentL1",),
-            ("Current", "L1", "value"),
-            ("Current", "L1"),
-        ),
-        unit_paths=(("Current", "L1", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="voltage_l1",
@@ -157,12 +151,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("CurrentL2", "value"),
         unit_path=("CurrentL2", "unit"),
-        key_paths=(
-            ("CurrentL2",),
-            ("Current", "L2", "value"),
-            ("Current", "L2"),
-        ),
-        unit_paths=(("Current", "L2", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="current_l3",
@@ -172,12 +160,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("CurrentL3", "value"),
         unit_path=("CurrentL3", "unit"),
-        key_paths=(
-            ("CurrentL3",),
-            ("Current", "L3", "value"),
-            ("Current", "L3"),
-        ),
-        unit_paths=(("Current", "L3", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="voltage_l2",
@@ -205,14 +187,8 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerPlusL1", "value"),
         unit_path=("PowerPlusL1", "unit"),
-        key_paths=(
-            ("PowerPlusL1",),
-            ("PowerL1Plus", "value"),
-            ("PowerL1Plus",),
-            ("PowerDeliveredL1", "value"),
-            ("PowerDeliveredL1",),
-        ),
-        unit_paths=(("PowerL1Plus", "unit"), ("PowerDeliveredL1", "unit")),
+        key_paths=(("PowerPlusL1",), ("PowerL1Plus", "value"), ("PowerL1Plus",)),
+        unit_paths=(("PowerL1Plus", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="power_plus_l2",
@@ -222,14 +198,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerPlusL2", "value"),
         unit_path=("PowerPlusL2", "unit"),
-        key_paths=(
-            ("PowerPlusL2",),
-            ("PowerL2Plus", "value"),
-            ("PowerL2Plus",),
-            ("PowerDeliveredL2", "value"),
-            ("PowerDeliveredL2",),
-        ),
-        unit_paths=(("PowerL2Plus", "unit"), ("PowerDeliveredL2", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_plus_l3",
@@ -239,14 +207,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerPlusL3", "value"),
         unit_path=("PowerPlusL3", "unit"),
-        key_paths=(
-            ("PowerPlusL3",),
-            ("PowerL3Plus", "value"),
-            ("PowerL3Plus",),
-            ("PowerDeliveredL3", "value"),
-            ("PowerDeliveredL3",),
-        ),
-        unit_paths=(("PowerL3Plus", "unit"), ("PowerDeliveredL3", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_min_l1",
@@ -256,14 +216,8 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerMinL1", "value"),
         unit_path=("PowerMinL1", "unit"),
-        key_paths=(
-            ("PowerMinL1",),
-            ("PowerL1Min", "value"),
-            ("PowerL1Min",),
-            ("PowerReturnedL1", "value"),
-            ("PowerReturnedL1",),
-        ),
-        unit_paths=(("PowerL1Min", "unit"), ("PowerReturnedL1", "unit")),
+        key_paths=(("PowerMinL1",), ("PowerL1Min", "value"), ("PowerL1Min",)),
+        unit_paths=(("PowerL1Min", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="power_min_l2",
@@ -273,14 +227,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerMinL2", "value"),
         unit_path=("PowerMinL2", "unit"),
-        key_paths=(
-            ("PowerMinL2",),
-            ("PowerL2Min", "value"),
-            ("PowerL2Min",),
-            ("PowerReturnedL2", "value"),
-            ("PowerReturnedL2",),
-        ),
-        unit_paths=(("PowerL2Min", "unit"), ("PowerReturnedL2", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_min_l3",
@@ -290,14 +236,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerMinL3", "value"),
         unit_path=("PowerMinL3", "unit"),
-        key_paths=(
-            ("PowerMinL3",),
-            ("PowerL3Min", "value"),
-            ("PowerL3Min",),
-            ("PowerReturnedL3", "value"),
-            ("PowerReturnedL3",),
-        ),
-        unit_paths=(("PowerL3Min", "unit"), ("PowerReturnedL3", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="gas",
@@ -899,7 +837,7 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
             return None
         if len(price_values) != len(SESSION_PRICE_ENTITY_IDS):
             return None
-        average_price = sum(price_values, Decimal(0)) / Decimal(len(price_values))
+        average_price = sum(price_values, Decimal(0)) / Decimal(2)
         return float((charge_value * average_price).quantize(Decimal("0.01"), rounding=ROUND_CEILING))
 
 

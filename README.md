@@ -134,9 +134,6 @@ release, then restart. Existing integration settings are retained.
   WebSocket sends complete JSON objects.
 - Check that the controller is sending valid JSON objects; arrays and malformed
   JSON are ignored deliberately.
-- If a P1 phase sensor is unknown, update to the latest integration version;
-  it accepts the JunoBox `PowerDeliveredL*`, `PowerReturnedL*`, and
-  `PowerL*Plus`/`PowerL*Min` field variants.
 - A persistent notification indicates that no valid telemetry was received for
   five minutes. The integration continues reconnecting automatically.
 - To investigate a problem, set **Payload log level** to `Debug` temporarily
