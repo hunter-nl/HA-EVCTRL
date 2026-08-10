@@ -45,6 +45,20 @@ THREE_PHASE_P1_SENSOR_KEYS = frozenset(
     }
 )
 
+THREE_PHASE_P1_SENSOR_ICONS = {
+    "current_l2": "mdi:current-ac",
+    "current_l3": "mdi:current-ac",
+    "voltage_l2": "mdi:sine-wave",
+    "voltage_l3": "mdi:sine-wave",
+    "power_plus_l2": "mdi:transmission-tower-export",
+    "power_plus_l3": "mdi:transmission-tower-export",
+    "power_min_l2": "mdi:transmission-tower-import",
+    "power_min_l3": "mdi:transmission-tower-import",
+}
+
+FAILURE_LOG_ENTRY_PATTERN = re.compile(r"\((\d{12})([SW])\)\((\d+)\*s\)")
+FAILURE_LOG_COUNT_PATTERN = re.compile(r"^\((\d+)\)")
+
 
 def _normalize_key_name(key: str) -> str:
     return re.sub(r"[^a-z0-9]", "", key.lower())
@@ -160,6 +174,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="current_l2",
         name="P1 Current L2",
+        icon="mdi:current-ac",
         group=GROUP_P1,
         device_class=SensorDeviceClass.CURRENT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -169,6 +184,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="current_l3",
         name="P1 Current L3",
+        icon="mdi:current-ac",
         group=GROUP_P1,
         device_class=SensorDeviceClass.CURRENT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -178,6 +194,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="voltage_l2",
         name="P1 Voltage L2",
+        icon="mdi:sine-wave",
         group=GROUP_P1,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -187,6 +204,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="voltage_l3",
         name="P1 Voltage L3",
+        icon="mdi:sine-wave",
         group=GROUP_P1,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -207,6 +225,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_plus_l2",
         name="P1 Power Delivered L2",
+        icon="mdi:transmission-tower-export",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -216,6 +235,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_plus_l3",
         name="P1 Power Delivered L3",
+        icon="mdi:transmission-tower-export",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -236,6 +256,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_min_l2",
         name="P1 Power Returned L2",
+        icon="mdi:transmission-tower-import",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -245,6 +266,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_min_l3",
         name="P1 Power Returned L3",
+        icon="mdi:transmission-tower-import",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -681,7 +703,8 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
-        self._attr_name = f"{prefix} {description.name}"
+        assert isinstance(description.name, str)
+        self._attr_name = description.name
         self._attr_unique_id = f"{entry_id}_{description.key}"
         if description.key in THREE_PHASE_P1_SENSOR_KEYS:
             self._attr_entity_registry_enabled_default = grid_phases == 3
@@ -705,10 +728,13 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
             return self._session_duration()
         if self.entity_description.key == "session_cost":
             return self._session_cost()
-        return self._extract_first(
+        value = self._extract_first(
             self.entity_description.key_path,
             self.entity_description.key_paths,
         )
+        if self.entity_description.key == "p1_failures_log":
+            return _format_failure_log(value)
+        return value
 
     @property
     def native_unit_of_measurement(self) -> str | None:
@@ -886,7 +912,37 @@ def _sync_phase_entity_registry(hass, entry_id: str, grid_phases: int) -> None:
         registry_entry = registry.async_get(entity_id)
         if registry_entry is None:
             continue
+        updates: dict[str, Any] = {
+            "original_icon": THREE_PHASE_P1_SENSOR_ICONS[key],
+        }
+        if registry_entry.name is None:
+            updates["original_name"] = next(
+                description.name for description in SENSOR_DESCRIPTIONS if description.key == key
+            )
         if grid_phases == 1 and registry_entry.disabled_by is None:
-            registry.async_update_entity(entity_id, disabled_by=er.RegistryEntryDisabler.INTEGRATION)
+            updates["disabled_by"] = er.RegistryEntryDisabler.INTEGRATION
         elif grid_phases == 3 and registry_entry.disabled_by is er.RegistryEntryDisabler.INTEGRATION:
-            registry.async_update_entity(entity_id, disabled_by=None)
+            updates["disabled_by"] = None
+        registry.async_update_entity(entity_id, **updates)
+
+
+def _format_failure_log(value: Any | None) -> str | None:
+    """Format DSMR power failure events into a readable sensor state."""
+    if not isinstance(value, str):
+        return None if value is None else str(value)
+
+    entries = FAILURE_LOG_ENTRY_PATTERN.findall(value)
+    if not entries:
+        return value
+
+    count_match = FAILURE_LOG_COUNT_PATTERN.match(value)
+    count = count_match.group(1) if count_match else str(len(entries))
+    lines = [f"FAILURES LOG ({count})"]
+    for timestamp, season_code, duration in entries:
+        try:
+            occurred_at = datetime.strptime(f"20{timestamp}", "%Y%m%d%H%M%S")
+        except ValueError:
+            return value
+        season = "Summer" if season_code == "S" else "Winter"
+        lines.append(f"{occurred_at:%Y-%m-%d %H:%M:%S} {season} -> {int(duration)} sec")
+    return "\n".join(lines)

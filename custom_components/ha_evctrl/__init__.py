@@ -57,7 +57,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "start_unsub": None,
         "coordinator": coordinator,
         CONF_SENSOR_PREFIX: entry.options.get(CONF_SENSOR_PREFIX, DEFAULT_SENSOR_PREFIX),
-        CONF_GRID_PHASES: entry.options.get(CONF_GRID_PHASES, DEFAULT_GRID_PHASES),
+        CONF_GRID_PHASES: int(entry.options.get(CONF_GRID_PHASES, DEFAULT_GRID_PHASES)),
     }
     hass.data[DOMAIN][entry.entry_id] = integration_data
 
