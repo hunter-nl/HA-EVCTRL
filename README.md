@@ -75,6 +75,8 @@ cloud service.
 
 The integration selects the transport from the URL scheme. SSE endpoints are
 commonly named `/events`, but the exact path is determined by the controller.
+The integration identifies itself to JunoBox controllers with the
+`X-JunoBox-Client: home-assistant` request header.
 
 ## Entities and payloads
 

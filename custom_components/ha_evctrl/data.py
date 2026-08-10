@@ -21,6 +21,7 @@ INFO_PAYLOAD_LOG_INTERVAL = 300
 DEFAULT_PAYLOAD_LOG_LEVEL = getattr(evctrl_const, "DEFAULT_PAYLOAD_LOG_LEVEL", "off")
 PAYLOAD_LOG_LEVEL_INFO = getattr(evctrl_const, "PAYLOAD_LOG_LEVEL_INFO", "info")
 PAYLOAD_LOG_LEVEL_DEBUG = getattr(evctrl_const, "PAYLOAD_LOG_LEVEL_DEBUG", "debug")
+JUNOBOX_CLIENT_HEADER = {"X-JunoBox-Client": "home-assistant"}
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -154,7 +155,11 @@ class EvCtrlWebsocketClient:
         while self._is_running:
             try:
                 _LOGGER.debug("Connecting to websocket %s", self._url)
-                async with self._session.ws_connect(self._url, heartbeat=30) as ws:
+                async with self._session.ws_connect(
+                    self._url,
+                    heartbeat=30,
+                    headers=JUNOBOX_CLIENT_HEADER,
+                ) as ws:
                     last_payload_at = asyncio.get_running_loop().time()
                     while self._is_running:
                         remaining = STREAM_INACTIVITY_TIMEOUT - (asyncio.get_running_loop().time() - last_payload_at)
@@ -203,7 +208,7 @@ class EvCtrlEventSourceClient:
         self._coordinator = coordinator
         self._session = aiohttp_client.async_get_clientsession(hass)
         self._task: asyncio.Task[None] | None = None
-        self._headers = {"Accept": "text/event-stream"}
+        self._headers = {"Accept": "text/event-stream", **JUNOBOX_CLIENT_HEADER}
         self._reconnect_interval = max(
             1,
             reconnect_interval if reconnect_interval is not None else DEFAULT_RECONNECT_INTERVAL,
