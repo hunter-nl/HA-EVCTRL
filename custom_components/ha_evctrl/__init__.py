@@ -12,8 +12,6 @@ from . import data as evctrl_data
 
 DOMAIN = evctrl_const.DOMAIN
 CONF_WS_URL = evctrl_const.CONF_WS_URL
-CONF_USERNAME = evctrl_const.CONF_USERNAME
-CONF_PASSWORD = evctrl_const.CONF_PASSWORD
 CONF_RECONNECT_INTERVAL = evctrl_const.CONF_RECONNECT_INTERVAL
 CONF_SENSOR_PREFIX = evctrl_const.CONF_SENSOR_PREFIX
 CONF_PAYLOAD_LOG_LEVEL = getattr(evctrl_const, "CONF_PAYLOAD_LOG_LEVEL", "payload_log_level")
@@ -31,8 +29,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     coordinator = evctrl_data.EvCtrlDataUpdateCoordinator(hass, entry.entry_id)
     stream_url = entry.options.get(CONF_WS_URL, entry.data[CONF_WS_URL]).strip()
-    username = entry.options.get(CONF_USERNAME, entry.data.get(CONF_USERNAME, "")).strip()
-    password = entry.options.get(CONF_PASSWORD, entry.data.get(CONF_PASSWORD, ""))
     reconnect_interval = entry.options.get(CONF_RECONNECT_INTERVAL, DEFAULT_RECONNECT_INTERVAL)
     payload_log_level = entry.options.get(CONF_PAYLOAD_LOG_LEVEL, DEFAULT_PAYLOAD_LOG_LEVEL)
     client = evctrl_data.create_evctrl_client(
@@ -41,8 +37,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         coordinator,
         reconnect_interval,
         payload_log_level,
-        username,
-        password,
     )
     _LOGGER.info(
         "Using %s transport for %s",
