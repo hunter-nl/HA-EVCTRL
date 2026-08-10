@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.helpers import selector
 
 from . import const as evctrl_const
 
@@ -47,7 +48,12 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
             vol.Coerce(int), vol.Range(min=5, max=300)
         ),
         vol.Optional(CONF_SENSOR_PREFIX, default=DEFAULT_SENSOR_PREFIX): str,
-        vol.Optional(CONF_GRID_PHASES, default=DEFAULT_GRID_PHASES): vol.In(GRID_PHASE_OPTIONS),
+        vol.Optional(CONF_GRID_PHASES, default=str(DEFAULT_GRID_PHASES)): selector.SelectSelector(
+            selector.SelectSelectorConfig(
+                options=[str(option) for option in GRID_PHASE_OPTIONS],
+                mode=selector.SelectSelectorMode.LIST,
+            )
+        ),
     }
 )
 
@@ -72,7 +78,7 @@ class EvCtrlFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_RECONNECT_INTERVAL: user_input[CONF_RECONNECT_INTERVAL],
                         CONF_SENSOR_PREFIX: sensor_prefix or DEFAULT_SENSOR_PREFIX,
                         CONF_PAYLOAD_LOG_LEVEL: DEFAULT_PAYLOAD_LOG_LEVEL,
-                        CONF_GRID_PHASES: user_input[CONF_GRID_PHASES],
+                        CONF_GRID_PHASES: int(user_input[CONF_GRID_PHASES]),
                     },
                 )
 
@@ -123,8 +129,13 @@ class EvCtrlOptionsFlowHandler(config_entries.OptionsFlow):
                 ): vol.In(PAYLOAD_LOG_LEVEL_OPTIONS),
                 vol.Optional(
                     CONF_GRID_PHASES,
-                    default=self.config_entry.options.get(CONF_GRID_PHASES, DEFAULT_GRID_PHASES),
-                ): vol.In(GRID_PHASE_OPTIONS),
+                    default=str(self.config_entry.options.get(CONF_GRID_PHASES, DEFAULT_GRID_PHASES)),
+                ): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=[str(option) for option in GRID_PHASE_OPTIONS],
+                        mode=selector.SelectSelectorMode.LIST,
+                    )
+                ),
             }
         )
 

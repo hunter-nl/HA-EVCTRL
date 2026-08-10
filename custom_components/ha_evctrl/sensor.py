@@ -45,6 +45,78 @@ THREE_PHASE_P1_SENSOR_KEYS = frozenset(
     }
 )
 
+THREE_PHASE_P1_SENSOR_ICONS = {
+    "current_l2": "mdi:current-ac",
+    "current_l3": "mdi:current-ac",
+    "voltage_l2": "mdi:sine-wave",
+    "voltage_l3": "mdi:sine-wave",
+    "power_plus_l2": "mdi:transmission-tower-export",
+    "power_plus_l3": "mdi:transmission-tower-export",
+    "power_min_l2": "mdi:transmission-tower-import",
+    "power_min_l3": "mdi:transmission-tower-import",
+}
+
+SENSOR_ICONS = {
+    "t1_plus": "mdi:transmission-tower-export",
+    "t2_plus": "mdi:transmission-tower-export",
+    "t1_min": "mdi:transmission-tower-import",
+    "t2_min": "mdi:transmission-tower-import",
+    "power_plus": "mdi:transmission-tower-export",
+    "power_min": "mdi:transmission-tower-import",
+    "current_l1": "mdi:current-ac",
+    "current_l2": "mdi:current-ac",
+    "current_l3": "mdi:current-ac",
+    "voltage_l1": "mdi:sine-wave",
+    "voltage_l2": "mdi:sine-wave",
+    "voltage_l3": "mdi:sine-wave",
+    "power_plus_l1": "mdi:transmission-tower-export",
+    "power_plus_l2": "mdi:transmission-tower-export",
+    "power_plus_l3": "mdi:transmission-tower-export",
+    "power_min_l1": "mdi:transmission-tower-import",
+    "power_min_l2": "mdi:transmission-tower-import",
+    "power_min_l3": "mdi:transmission-tower-import",
+    "gas": "mdi:meter-gas-outline",
+    "gas_date": "mdi:calendar-clock",
+    "tariff": "mdi:cash",
+    "ev_meter_total": "mdi:ev-station",
+    "ev_meter_power": "mdi:flash",
+    "ev_meter_current": "mdi:current-ac",
+    "ev_meter_voltage_l1": "mdi:sine-wave",
+    "ev_meter_power_l1": "mdi:flash",
+    "ev_meter_frequency": "mdi:sine-wave",
+    "relais_state": "mdi:toggle-switch",
+    "evse_mode": "mdi:ev-station",
+    "evse_state": "mdi:ev-station",
+    "evse_charge": "mdi:current-ac",
+    "evse_temp": "mdi:thermometer",
+    "evse_error": "mdi:alert-circle",
+    "evse_set_charge": "mdi:current-ac",
+    "evse_max_current": "mdi:current-ac",
+    "evse_connected": "mdi:ev-plug-type2",
+    "controller_datetime": "mdi:calendar-clock",
+    "controller_date": "mdi:calendar",
+    "controller_time": "mdi:clock-outline",
+    "sunrise": "mdi:weather-sunset-up",
+    "sunset": "mdi:weather-sunset-down",
+    "controller_version": "mdi:tag-text",
+    "p1_last_update": "mdi:update",
+    "p1_sags": "mdi:chart-line-variant",
+    "p1_swells": "mdi:chart-line-variant",
+    "p1_failures": "mdi:alert",
+    "p1_long_failures": "mdi:alert-octagon",
+    "p1_failures_log": "mdi:format-list-bulleted",
+    "session_charge": "mdi:battery-charging",
+    "session_meter_begin": "mdi:counter",
+    "session_meter_end": "mdi:counter",
+    "session_duration": "mdi:timer-outline",
+    "session_start": "mdi:clock-start",
+    "session_end": "mdi:clock-end",
+    "session_cost": "mdi:currency-eur",
+}
+
+FAILURE_LOG_ENTRY_PATTERN = re.compile(r"\((\d{12})([SW])\)\((\d+)\*s\)")
+FAILURE_LOG_COUNT_PATTERN = re.compile(r"^\((\d+)\)")
+
 
 def _normalize_key_name(key: str) -> str:
     return re.sub(r"[^a-z0-9]", "", key.lower())
@@ -160,6 +232,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="current_l2",
         name="P1 Current L2",
+        icon="mdi:current-ac",
         group=GROUP_P1,
         device_class=SensorDeviceClass.CURRENT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -169,6 +242,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="current_l3",
         name="P1 Current L3",
+        icon="mdi:current-ac",
         group=GROUP_P1,
         device_class=SensorDeviceClass.CURRENT,
         state_class=SensorStateClass.MEASUREMENT,
@@ -178,6 +252,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="voltage_l2",
         name="P1 Voltage L2",
+        icon="mdi:sine-wave",
         group=GROUP_P1,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -187,6 +262,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="voltage_l3",
         name="P1 Voltage L3",
+        icon="mdi:sine-wave",
         group=GROUP_P1,
         device_class=SensorDeviceClass.VOLTAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -207,6 +283,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_plus_l2",
         name="P1 Power Delivered L2",
+        icon="mdi:transmission-tower-export",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -216,6 +293,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_plus_l3",
         name="P1 Power Delivered L3",
+        icon="mdi:transmission-tower-export",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -236,6 +314,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_min_l2",
         name="P1 Power Returned L2",
+        icon="mdi:transmission-tower-import",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -245,6 +324,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
     EvCtrlSensorEntityDescription(
         key="power_min_l3",
         name="P1 Power Returned L3",
+        icon="mdi:transmission-tower-import",
         group=GROUP_P1,
         device_class=SensorDeviceClass.POWER,
         state_class=SensorStateClass.MEASUREMENT,
@@ -681,8 +761,10 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
-        self._attr_name = f"{prefix} {description.name}"
+        assert isinstance(description.name, str)
+        self._attr_name = description.name
         self._attr_unique_id = f"{entry_id}_{description.key}"
+        self._attr_icon = SENSOR_ICONS[description.key]
         if description.key in THREE_PHASE_P1_SENSOR_KEYS:
             self._attr_entity_registry_enabled_default = grid_phases == 3
         group_meta = GROUP_METADATA[description.group]
@@ -705,10 +787,13 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
             return self._session_duration()
         if self.entity_description.key == "session_cost":
             return self._session_cost()
-        return self._extract_first(
+        value = self._extract_first(
             self.entity_description.key_path,
             self.entity_description.key_paths,
         )
+        if self.entity_description.key == "p1_failures_log":
+            return _format_failure_log(value)
+        return value
 
     @property
     def native_unit_of_measurement(self) -> str | None:
@@ -867,6 +952,7 @@ async def async_setup_entry(
     prefix = entry_data[CONF_SENSOR_PREFIX]
     coordinator = entry_data["coordinator"]
     grid_phases = entry_data[CONF_GRID_PHASES]
+    _sync_entity_registry_icons(hass, entry.entry_id)
     _sync_phase_entity_registry(hass, entry.entry_id, grid_phases)
 
     async_add_entities(
@@ -886,7 +972,50 @@ def _sync_phase_entity_registry(hass, entry_id: str, grid_phases: int) -> None:
         registry_entry = registry.async_get(entity_id)
         if registry_entry is None:
             continue
+        updates: dict[str, Any] = {
+            "original_icon": THREE_PHASE_P1_SENSOR_ICONS[key],
+        }
+        if registry_entry.name is None:
+            updates["original_name"] = next(
+                description.name for description in SENSOR_DESCRIPTIONS if description.key == key
+            )
         if grid_phases == 1 and registry_entry.disabled_by is None:
-            registry.async_update_entity(entity_id, disabled_by=er.RegistryEntryDisabler.INTEGRATION)
+            updates["disabled_by"] = er.RegistryEntryDisabler.INTEGRATION
         elif grid_phases == 3 and registry_entry.disabled_by is er.RegistryEntryDisabler.INTEGRATION:
-            registry.async_update_entity(entity_id, disabled_by=None)
+            updates["disabled_by"] = None
+        registry.async_update_entity(entity_id, **updates)
+
+
+def _sync_entity_registry_icons(hass, entry_id: str) -> None:
+    """Persist integration icons, including for disabled entities."""
+    registry = er.async_get(hass)
+    for key, icon in SENSOR_ICONS.items():
+        entity_id = registry.async_get_entity_id("sensor", DOMAIN, f"{entry_id}_{key}")
+        if entity_id is None:
+            continue
+        registry_entry = registry.async_get(entity_id)
+        if registry_entry is None or registry_entry.original_icon == icon:
+            continue
+        registry.async_update_entity(entity_id, original_icon=icon)
+
+
+def _format_failure_log(value: Any | None) -> str | None:
+    """Format DSMR power failure events into a readable sensor state."""
+    if not isinstance(value, str):
+        return None if value is None else str(value)
+
+    entries = FAILURE_LOG_ENTRY_PATTERN.findall(value)
+    if not entries:
+        return value
+
+    count_match = FAILURE_LOG_COUNT_PATTERN.match(value)
+    count = count_match.group(1) if count_match else str(len(entries))
+    lines = [f"FAILURES LOG ({count})"]
+    for timestamp, season_code, duration in entries:
+        try:
+            occurred_at = datetime.strptime(f"20{timestamp}", "%Y%m%d%H%M%S")
+        except ValueError:
+            return value
+        season = "Summer" if season_code == "S" else "Winter"
+        lines.append(f"{occurred_at:%Y-%m-%d %H:%M:%S} {season} -> {int(duration)} sec")
+    return "\n".join(lines)
