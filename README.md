@@ -78,6 +78,17 @@ commonly named `/events`, but the exact path is determined by the controller.
 The integration identifies itself to JunoBox controllers with the
 `X-JunoBox-Client: home-assistant` request header.
 
+### Session cost
+
+**Session Cost** is calculated locally from the current session charge and the
+average of these Home Assistant helpers:
+
+- `input_number.electricity_export_t1_price`
+- `input_number.electricity_export_t2_price`
+
+The result is rounded up to two decimal places. Create both helpers with a
+price per kWh in EUR before using the session-cost sensor.
+
 ## Entities and payloads
 
 The integration creates entities for fields available in the latest JSON object.
