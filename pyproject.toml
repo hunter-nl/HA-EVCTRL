@@ -1,6 +1,6 @@
 [project]
 name = "ha-evctrl"
-version = "1.0.0-beta.1"
+version = "1.0.0"
 description = "Home Assistant integration for EV & P1 controller."
 readme = "README.md"
 requires-python = ">=3.14.2"

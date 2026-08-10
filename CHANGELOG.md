@@ -4,6 +4,20 @@ If you find this project useful, consider supporting its development:
 <a href="https://www.buymeacoffee.com/hunter.nl" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 # Changelog
+## [v1.0.0](https://github.com/hunter-nl/HA_EVCTRL/releases/tag/v1.0.0)
+
+
+
+### 🐛 Fixes
+
+- [Fix: support authenticated telemetry streams](https://github.com/hunter-nl/HA_EVCTRL/pull/4) ([#4](https://github.com/hunter-nl/HA_EVCTRL/pull/4))
+
+
+
+
+
+
+
 ## [v1.0.0-beta.1](https://github.com/hunter-nl/HA_EVCTRL/releases/tag/v1.0.0-beta.1)
 
 
@@ -35,6 +49,11 @@ If you find this project useful, consider supporting its development:
 
 
 ## ❤️ New Contributors
+
+
+* @releases-manager[bot] made their first contribution
+
+in [#3](https://github.com/hunter-nl/HA_EVCTRL/pull/3)
 
 
 * @hunter-nl made their first contribution
