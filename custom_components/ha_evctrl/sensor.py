@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from datetime import datetime
+from decimal import ROUND_CEILING, Decimal, InvalidOperation
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -11,8 +12,10 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
+from homeassistant.core import callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import CONF_SENSOR_PREFIX, DOMAIN
@@ -22,6 +25,11 @@ UNIT_NORMALIZATION = {
     "m3": "m³",
     "ft3": "ft³",
 }
+
+SESSION_PRICE_ENTITY_IDS = (
+    "input_number.electricity_export_t1_price",
+    "input_number.electricity_export_t2_price",
+)
 
 
 def _normalize_key_name(key: str) -> str:
@@ -125,6 +133,12 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("CurrentL1", "value"),
         unit_path=("CurrentL1", "unit"),
+        key_paths=(
+            ("CurrentL1",),
+            ("Current", "L1", "value"),
+            ("Current", "L1"),
+        ),
+        unit_paths=(("Current", "L1", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="voltage_l1",
@@ -143,6 +157,12 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("CurrentL2", "value"),
         unit_path=("CurrentL2", "unit"),
+        key_paths=(
+            ("CurrentL2",),
+            ("Current", "L2", "value"),
+            ("Current", "L2"),
+        ),
+        unit_paths=(("Current", "L2", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="current_l3",
@@ -152,6 +172,12 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("CurrentL3", "value"),
         unit_path=("CurrentL3", "unit"),
+        key_paths=(
+            ("CurrentL3",),
+            ("Current", "L3", "value"),
+            ("Current", "L3"),
+        ),
+        unit_paths=(("Current", "L3", "unit"),),
     ),
     EvCtrlSensorEntityDescription(
         key="voltage_l2",
@@ -179,8 +205,14 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerPlusL1", "value"),
         unit_path=("PowerPlusL1", "unit"),
-        key_paths=(("PowerPlusL1",), ("PowerL1Plus", "value"), ("PowerL1Plus",)),
-        unit_paths=(("PowerL1Plus", "unit"),),
+        key_paths=(
+            ("PowerPlusL1",),
+            ("PowerL1Plus", "value"),
+            ("PowerL1Plus",),
+            ("PowerDeliveredL1", "value"),
+            ("PowerDeliveredL1",),
+        ),
+        unit_paths=(("PowerL1Plus", "unit"), ("PowerDeliveredL1", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_plus_l2",
@@ -190,6 +222,14 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerPlusL2", "value"),
         unit_path=("PowerPlusL2", "unit"),
+        key_paths=(
+            ("PowerPlusL2",),
+            ("PowerL2Plus", "value"),
+            ("PowerL2Plus",),
+            ("PowerDeliveredL2", "value"),
+            ("PowerDeliveredL2",),
+        ),
+        unit_paths=(("PowerL2Plus", "unit"), ("PowerDeliveredL2", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_plus_l3",
@@ -199,6 +239,14 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerPlusL3", "value"),
         unit_path=("PowerPlusL3", "unit"),
+        key_paths=(
+            ("PowerPlusL3",),
+            ("PowerL3Plus", "value"),
+            ("PowerL3Plus",),
+            ("PowerDeliveredL3", "value"),
+            ("PowerDeliveredL3",),
+        ),
+        unit_paths=(("PowerL3Plus", "unit"), ("PowerDeliveredL3", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_min_l1",
@@ -208,8 +256,14 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerMinL1", "value"),
         unit_path=("PowerMinL1", "unit"),
-        key_paths=(("PowerMinL1",), ("PowerL1Min", "value"), ("PowerL1Min",)),
-        unit_paths=(("PowerL1Min", "unit"),),
+        key_paths=(
+            ("PowerMinL1",),
+            ("PowerL1Min", "value"),
+            ("PowerL1Min",),
+            ("PowerReturnedL1", "value"),
+            ("PowerReturnedL1",),
+        ),
+        unit_paths=(("PowerL1Min", "unit"), ("PowerReturnedL1", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_min_l2",
@@ -219,6 +273,14 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerMinL2", "value"),
         unit_path=("PowerMinL2", "unit"),
+        key_paths=(
+            ("PowerMinL2",),
+            ("PowerL2Min", "value"),
+            ("PowerL2Min",),
+            ("PowerReturnedL2", "value"),
+            ("PowerReturnedL2",),
+        ),
+        unit_paths=(("PowerL2Min", "unit"), ("PowerReturnedL2", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="power_min_l3",
@@ -228,6 +290,14 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         key_path=("PowerMinL3", "value"),
         unit_path=("PowerMinL3", "unit"),
+        key_paths=(
+            ("PowerMinL3",),
+            ("PowerL3Min", "value"),
+            ("PowerL3Min",),
+            ("PowerReturnedL3", "value"),
+            ("PowerReturnedL3",),
+        ),
+        unit_paths=(("PowerL3Min", "unit"), ("PowerReturnedL3", "unit")),
     ),
     EvCtrlSensorEntityDescription(
         key="gas",
@@ -636,6 +706,8 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         key="session_cost",
         name="Session Cost",
         group=GROUP_EV_SESSION,
+        device_class=SensorDeviceClass.MONETARY,
+        state_class=SensorStateClass.MEASUREMENT,
         key_path=("Session", "Cost", "value"),
         unit_path=("Session", "Cost", "unit"),
         key_paths=(("Session", "Cost"), ("SessionCost", "value"), ("SessionCost",)),
@@ -676,6 +748,8 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
             return self._compose_datetime(("P1Date",), ("P1Time",), ("P1DST",))
         if self.entity_description.key == "session_duration":
             return self._session_duration()
+        if self.entity_description.key == "session_cost":
+            return self._session_cost()
         return self._extract_first(
             self.entity_description.key_path,
             self.entity_description.key_paths,
@@ -683,6 +757,8 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def native_unit_of_measurement(self) -> str | None:
+        if self.entity_description.key == "session_cost":
+            return "EUR"
         if self.entity_description.unit_path is None:
             return self.entity_description.native_unit_of_measurement
         unit = self._extract_first(
@@ -692,6 +768,23 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
         if not isinstance(unit, str):
             return unit
         return UNIT_NORMALIZATION.get(unit, unit)
+
+    async def async_added_to_hass(self) -> None:
+        """Refresh the session cost when one of its price helpers changes."""
+        await super().async_added_to_hass()
+        if self.entity_description.key != "session_cost":
+            return
+        self.async_on_remove(
+            async_track_state_change_event(
+                self.hass,
+                SESSION_PRICE_ENTITY_IDS,
+                self._async_price_changed,
+            )
+        )
+
+    @callback
+    def _async_price_changed(self, _event) -> None:
+        self.async_write_ha_state()
 
     def _extract_first(
         self,
@@ -791,6 +884,23 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
         hours, remainder = divmod(total_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         return f"{hours:02}:{minutes:02}:{seconds:02}"
+
+    def _session_cost(self) -> float | None:
+        charge = self._extract_value(("Session", "Charge", "value"))
+        if charge is None:
+            return None
+        prices = [self.hass.states.get(entity_id) for entity_id in SESSION_PRICE_ENTITY_IDS]
+        if any(price is None for price in prices):
+            return None
+        try:
+            charge_value = Decimal(str(charge))
+            price_values = [Decimal(price.state) for price in prices if price is not None]
+        except InvalidOperation, ValueError:
+            return None
+        if len(price_values) != len(SESSION_PRICE_ENTITY_IDS):
+            return None
+        average_price = sum(price_values, Decimal(0)) / Decimal(len(price_values))
+        return float((charge_value * average_price).quantize(Decimal("0.01"), rounding=ROUND_CEILING))
 
 
 async def async_setup_entry(
