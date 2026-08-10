@@ -112,6 +112,8 @@ class EvCtrlWebsocketClient:
         coordinator: EvCtrlDataUpdateCoordinator,
         reconnect_interval: int | None = None,
         payload_log_level: str = DEFAULT_PAYLOAD_LOG_LEVEL,
+        username: str = "",
+        password: str = "",
     ) -> None:
         self._hass = hass
         self._url = url
@@ -124,6 +126,7 @@ class EvCtrlWebsocketClient:
         )
         self._is_running = False
         self._payload_log_level = payload_log_level
+        self._auth = aiohttp.BasicAuth(username, password) if username else None
         self._health = StreamHealthMonitor(hass, f"{coordinator.name}_websocket")
 
     def start(self) -> None:
@@ -154,7 +157,11 @@ class EvCtrlWebsocketClient:
         while self._is_running:
             try:
                 _LOGGER.debug("Connecting to websocket %s", self._url)
-                async with self._session.ws_connect(self._url, heartbeat=30) as ws:
+                async with self._session.ws_connect(
+                    self._url,
+                    auth=self._auth,
+                    heartbeat=30,
+                ) as ws:
                     last_payload_at = asyncio.get_running_loop().time()
                     while self._is_running:
                         remaining = STREAM_INACTIVITY_TIMEOUT - (asyncio.get_running_loop().time() - last_payload_at)
@@ -197,6 +204,8 @@ class EvCtrlEventSourceClient:
         coordinator: EvCtrlDataUpdateCoordinator,
         reconnect_interval: int | None = None,
         payload_log_level: str = DEFAULT_PAYLOAD_LOG_LEVEL,
+        username: str = "",
+        password: str = "",
     ) -> None:
         self._hass = hass
         self._url = url
@@ -204,6 +213,7 @@ class EvCtrlEventSourceClient:
         self._session = aiohttp_client.async_get_clientsession(hass)
         self._task: asyncio.Task[None] | None = None
         self._headers = {"Accept": "text/event-stream"}
+        self._auth = aiohttp.BasicAuth(username, password) if username else None
         self._reconnect_interval = max(
             1,
             reconnect_interval if reconnect_interval is not None else DEFAULT_RECONNECT_INTERVAL,
@@ -244,6 +254,7 @@ class EvCtrlEventSourceClient:
                 async with self._session.get(
                     self._url,
                     headers=self._headers,
+                    auth=self._auth,
                     timeout=timeout,
                 ) as response:
                     response.raise_for_status()
@@ -338,6 +349,8 @@ def create_evctrl_client(
     coordinator: EvCtrlDataUpdateCoordinator,
     reconnect_interval: int | None = None,
     payload_log_level: str = DEFAULT_PAYLOAD_LOG_LEVEL,
+    username: str = "",
+    password: str = "",
 ) -> EvCtrlWebsocketClient | EvCtrlEventSourceClient:
     normalized_url = url.strip()
     parsed_url = urlparse(normalized_url)
@@ -350,6 +363,8 @@ def create_evctrl_client(
             coordinator,
             reconnect_interval,
             payload_log_level,
+            username,
+            password,
         )
     return EvCtrlEventSourceClient(
         hass,
@@ -357,4 +372,6 @@ def create_evctrl_client(
         coordinator,
         reconnect_interval,
         payload_log_level,
+        username,
+        password,
     )

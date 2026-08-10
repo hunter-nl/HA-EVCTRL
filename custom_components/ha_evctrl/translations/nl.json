@@ -7,6 +7,8 @@
         "description": "Geef het ESP32-WebSocket- of Server-Sent Events-eindpunt (SSE) op en pas indien nodig het opnieuw verbinden en de sensornamen aan.",
         "data": {
           "websocket_url": "Streaming-URL",
+          "username": "Gebruikersnaam (optioneel)",
+          "password": "Wachtwoord (optioneel)",
           "reconnect_interval": "Interval voor opnieuw verbinden (seconden)",
           "sensor_prefix": "Sensorvoorvoegsel"
         }
@@ -21,6 +23,8 @@
       "init": {
         "data": {
           "websocket_url": "Streaming-URL",
+          "username": "Gebruikersnaam (optioneel)",
+          "password": "Wachtwoord (leeg laten om huidige te behouden)",
           "sensor_prefix": "Sensorvoorvoegsel",
           "reconnect_interval": "Interval voor opnieuw verbinden (seconden)",
           "payload_log_level": "Payload-logniveau"

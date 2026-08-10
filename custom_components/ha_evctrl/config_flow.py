@@ -6,11 +6,14 @@ from urllib.parse import urlparse
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.helpers import selector
 
 from . import const as evctrl_const
 
 DOMAIN = evctrl_const.DOMAIN
 CONF_WS_URL = evctrl_const.CONF_WS_URL
+CONF_USERNAME = evctrl_const.CONF_USERNAME
+CONF_PASSWORD = evctrl_const.CONF_PASSWORD
 CONF_RECONNECT_INTERVAL = evctrl_const.CONF_RECONNECT_INTERVAL
 CONF_SENSOR_PREFIX = evctrl_const.CONF_SENSOR_PREFIX
 CONF_PAYLOAD_LOG_LEVEL = getattr(evctrl_const, "CONF_PAYLOAD_LOG_LEVEL", "payload_log_level")
@@ -40,6 +43,8 @@ def _validate_stream_url(value: str) -> str:
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_WS_URL): _validate_stream_url,
+        vol.Optional(CONF_USERNAME, default=""): str,
+        vol.Optional(CONF_PASSWORD, default=""): selector.TextSelector({"type": "password"}),
         vol.Optional(CONF_RECONNECT_INTERVAL, default=DEFAULT_RECONNECT_INTERVAL): vol.All(
             vol.Coerce(int), vol.Range(min=5, max=300)
         ),
@@ -63,7 +68,11 @@ class EvCtrlFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 sensor_prefix = user_input.get(CONF_SENSOR_PREFIX, DEFAULT_SENSOR_PREFIX).strip()
                 return self.async_create_entry(
                     title=sensor_prefix or DEFAULT_SENSOR_PREFIX,
-                    data={CONF_WS_URL: stream_url},
+                    data={
+                        CONF_WS_URL: stream_url,
+                        CONF_USERNAME: user_input[CONF_USERNAME].strip(),
+                        CONF_PASSWORD: user_input[CONF_PASSWORD],
+                    },
                     options={
                         CONF_RECONNECT_INTERVAL: user_input[CONF_RECONNECT_INTERVAL],
                         CONF_SENSOR_PREFIX: sensor_prefix or DEFAULT_SENSOR_PREFIX,
@@ -93,6 +102,12 @@ class EvCtrlOptionsFlowHandler(config_entries.OptionsFlow):
             else:
                 user_input[CONF_WS_URL] = stream_url
                 user_input[CONF_SENSOR_PREFIX] = user_input[CONF_SENSOR_PREFIX].strip() or DEFAULT_SENSOR_PREFIX
+                user_input[CONF_USERNAME] = user_input[CONF_USERNAME].strip()
+                if not user_input[CONF_PASSWORD]:
+                    user_input[CONF_PASSWORD] = self.config_entry.options.get(
+                        CONF_PASSWORD,
+                        self.config_entry.data.get(CONF_PASSWORD, ""),
+                    )
                 return self.async_create_entry(title="", data=user_input)
 
         data_schema = vol.Schema(
@@ -104,6 +119,14 @@ class EvCtrlOptionsFlowHandler(config_entries.OptionsFlow):
                         self.config_entry.data.get(CONF_WS_URL, ""),
                     ),
                 ): str,
+                vol.Optional(
+                    CONF_USERNAME,
+                    default=self.config_entry.options.get(
+                        CONF_USERNAME,
+                        self.config_entry.data.get(CONF_USERNAME, ""),
+                    ),
+                ): str,
+                vol.Optional(CONF_PASSWORD, default=""): selector.TextSelector({"type": "password"}),
                 vol.Optional(
                     CONF_SENSOR_PREFIX,
                     default=self.config_entry.options.get(CONF_SENSOR_PREFIX, DEFAULT_SENSOR_PREFIX),

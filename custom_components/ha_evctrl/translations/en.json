@@ -7,6 +7,8 @@
         "description": "Provide the ESP32 WebSocket or Server-Sent Events (SSE) endpoint and adjust reconnection and sensor naming if needed.",
         "data": {
           "websocket_url": "Streaming URL",
+          "username": "Username (optional)",
+          "password": "Password (optional)",
           "reconnect_interval": "Reconnect interval (seconds)",
           "sensor_prefix": "Sensor prefix"
         }
@@ -21,6 +23,8 @@
       "init": {
         "data": {
           "websocket_url": "Streaming URL",
+          "username": "Username (optional)",
+          "password": "Password (leave blank to keep current)",
           "sensor_prefix": "Sensor prefix",
           "reconnect_interval": "Reconnect interval (seconds)",
           "payload_log_level": "Payload log level"

@@ -4,6 +4,8 @@ from datetime import timedelta
 
 DOMAIN = "ha_evctrl"
 CONF_WS_URL = "websocket_url"
+CONF_USERNAME = "username"
+CONF_PASSWORD = "password"
 CONF_RECONNECT_INTERVAL = "reconnect_interval"
 CONF_SENSOR_PREFIX = "sensor_prefix"
 CONF_PAYLOAD_LOG_LEVEL = "payload_log_level"
