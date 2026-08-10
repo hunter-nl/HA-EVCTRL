@@ -71,7 +71,7 @@ cloud service.
 | Streaming URL | Required absolute controller endpoint. Use `ws://` or `wss://` for WebSocket, or `http://`/`https://` for SSE. |
 | Reconnect interval | Time in seconds before a dropped stream is retried. Defaults to 15 seconds; supported range is 5–300 seconds. |
 | Sensor prefix | Prefix used in entity and device names. Defaults to `EV Control`. |
-| Grid phases | Number of P1 grid phases: `1` (default) or `3`. L2/L3 P1 sensors are created only for three-phase grids. |
+| Grid phases | Number of P1 grid phases: `1` (default) or `3`. L2/L3 P1 sensors are disabled by default for one-phase grids. |
 | Payload log level | Optional diagnostic setting: `Off`, `Info`, or `Debug`. Avoid `Debug` unless troubleshooting because it logs complete payloads. |
 
 The integration selects the transport from the URL scheme. SSE endpoints are
