@@ -8,7 +8,8 @@
         "data": {
           "websocket_url": "Streaming URL",
           "reconnect_interval": "Reconnect interval (seconds)",
-          "sensor_prefix": "Sensor prefix"
+          "sensor_prefix": "Sensor prefix",
+          "grid_phases": "Grid phases"
         }
       }
     },
@@ -23,7 +24,8 @@
           "websocket_url": "Streaming URL",
           "sensor_prefix": "Sensor prefix",
           "reconnect_interval": "Reconnect interval (seconds)",
-          "payload_log_level": "Payload log level"
+          "payload_log_level": "Payload log level",
+          "grid_phases": "Grid phases"
         }
       }
     }

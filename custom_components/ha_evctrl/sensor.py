@@ -13,12 +13,13 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.core import callback
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import CONF_SENSOR_PREFIX, DOMAIN
+from .const import CONF_GRID_PHASES, CONF_SENSOR_PREFIX, DOMAIN
 from .data import EvCtrlDataUpdateCoordinator
 
 UNIT_NORMALIZATION = {
@@ -29,6 +30,19 @@ UNIT_NORMALIZATION = {
 SESSION_PRICE_ENTITY_IDS = (
     "input_number.electricity_export_t1_price",
     "input_number.electricity_export_t2_price",
+)
+
+THREE_PHASE_P1_SENSOR_KEYS = frozenset(
+    {
+        "current_l2",
+        "current_l3",
+        "voltage_l2",
+        "voltage_l3",
+        "power_plus_l2",
+        "power_plus_l3",
+        "power_min_l2",
+        "power_min_l3",
+    }
 )
 
 
@@ -663,11 +677,14 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
         description: EvCtrlSensorEntityDescription,
         prefix: str,
         entry_id: str,
+        grid_phases: int,
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_name = f"{prefix} {description.name}"
         self._attr_unique_id = f"{entry_id}_{description.key}"
+        if description.key in THREE_PHASE_P1_SENSOR_KEYS:
+            self._attr_entity_registry_enabled_default = grid_phases == 3
         group_meta = GROUP_METADATA[description.group]
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry_id}_{description.group}")},
@@ -849,7 +866,27 @@ async def async_setup_entry(
     entry_data = hass.data[DOMAIN][entry.entry_id]
     prefix = entry_data[CONF_SENSOR_PREFIX]
     coordinator = entry_data["coordinator"]
+    grid_phases = entry_data[CONF_GRID_PHASES]
+    _sync_phase_entity_registry(hass, entry.entry_id, grid_phases)
 
     async_add_entities(
-        EvCtrlSensor(coordinator, description, prefix, entry.entry_id) for description in SENSOR_DESCRIPTIONS
+        EvCtrlSensor(coordinator, description, prefix, entry.entry_id, grid_phases)
+        for description in SENSOR_DESCRIPTIONS
     )
+
+
+def _sync_phase_entity_registry(hass, entry_id: str, grid_phases: int) -> None:
+    """Keep integration-disabled phase entities aligned with the grid setting."""
+    registry = er.async_get(hass)
+    for key in THREE_PHASE_P1_SENSOR_KEYS:
+        unique_id = f"{entry_id}_{key}"
+        entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
+        if entity_id is None:
+            continue
+        registry_entry = registry.async_get(entity_id)
+        if registry_entry is None:
+            continue
+        if grid_phases == 1 and registry_entry.disabled_by is None:
+            registry.async_update_entity(entity_id, disabled_by=er.RegistryEntryDisabler.INTEGRATION)
+        elif grid_phases == 3 and registry_entry.disabled_by is er.RegistryEntryDisabler.INTEGRATION:
+            registry.async_update_entity(entity_id, disabled_by=None)
