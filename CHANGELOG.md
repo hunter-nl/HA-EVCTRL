@@ -4,6 +4,23 @@ If you find this project useful, consider supporting its development:
 <a href="https://www.buymeacoffee.com/hunter.nl" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 # Changelog
+## [v1.0.1](https://github.com/hunter-nl/HA_EVCTRL/releases/tag/v1.0.1)
+
+
+
+### ✨ Features
+
+- [Feat: calculate session cost from HA prices](https://github.com/hunter-nl/HA_EVCTRL/pull/6) ([#6](https://github.com/hunter-nl/HA_EVCTRL/pull/6))
+
+
+
+
+
+
+
+
+
+
 ## [v1.0.0](https://github.com/hunter-nl/HA_EVCTRL/releases/tag/v1.0.0)
 
 
