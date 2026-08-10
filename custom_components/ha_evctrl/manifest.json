@@ -2,12 +2,14 @@
   "domain": "ha_evctrl",
   "name": "HA EV Control",
   "after_dependencies": [],
-  "codeowners": ["@hunter-nl"],
+  "codeowners": [
+    "@hunter-nl"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/hunter-nl/HA-EVCTRL",
   "integration_type": "service",
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/hunter-nl/HA-EVCTRL/issues",
   "requirements": [],
-  "version": "1.0.1"
+  "version": "1.0.0-beta.1"
 }
