@@ -15,9 +15,11 @@ CONF_WS_URL = evctrl_const.CONF_WS_URL
 CONF_RECONNECT_INTERVAL = evctrl_const.CONF_RECONNECT_INTERVAL
 CONF_SENSOR_PREFIX = evctrl_const.CONF_SENSOR_PREFIX
 CONF_PAYLOAD_LOG_LEVEL = getattr(evctrl_const, "CONF_PAYLOAD_LOG_LEVEL", "payload_log_level")
+CONF_GRID_PHASES = evctrl_const.CONF_GRID_PHASES
 DEFAULT_RECONNECT_INTERVAL = evctrl_const.DEFAULT_RECONNECT_INTERVAL
 DEFAULT_SENSOR_PREFIX = evctrl_const.DEFAULT_SENSOR_PREFIX
 DEFAULT_PAYLOAD_LOG_LEVEL = getattr(evctrl_const, "DEFAULT_PAYLOAD_LOG_LEVEL", "off")
+DEFAULT_GRID_PHASES = evctrl_const.DEFAULT_GRID_PHASES
 
 PLATFORMS = ["sensor", "binary_sensor"]
 
@@ -55,6 +57,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "start_unsub": None,
         "coordinator": coordinator,
         CONF_SENSOR_PREFIX: entry.options.get(CONF_SENSOR_PREFIX, DEFAULT_SENSOR_PREFIX),
+        CONF_GRID_PHASES: entry.options.get(CONF_GRID_PHASES, DEFAULT_GRID_PHASES),
     }
     hass.data[DOMAIN][entry.entry_id] = integration_data
 

@@ -8,7 +8,8 @@
         "data": {
           "websocket_url": "Streaming-URL",
           "reconnect_interval": "Interval voor opnieuw verbinden (seconden)",
-          "sensor_prefix": "Sensorvoorvoegsel"
+          "sensor_prefix": "Sensorvoorvoegsel",
+          "grid_phases": "Aantal netfasen"
         }
       }
     },
@@ -23,7 +24,8 @@
           "websocket_url": "Streaming-URL",
           "sensor_prefix": "Sensorvoorvoegsel",
           "reconnect_interval": "Interval voor opnieuw verbinden (seconden)",
-          "payload_log_level": "Payload-logniveau"
+          "payload_log_level": "Payload-logniveau",
+          "grid_phases": "Aantal netfasen"
         }
       }
     }

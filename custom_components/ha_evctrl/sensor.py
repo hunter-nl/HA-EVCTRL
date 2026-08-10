@@ -18,7 +18,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import CONF_SENSOR_PREFIX, DOMAIN
+from .const import CONF_GRID_PHASES, CONF_SENSOR_PREFIX, DOMAIN
 from .data import EvCtrlDataUpdateCoordinator
 
 UNIT_NORMALIZATION = {
@@ -29,6 +29,19 @@ UNIT_NORMALIZATION = {
 SESSION_PRICE_ENTITY_IDS = (
     "input_number.electricity_export_t1_price",
     "input_number.electricity_export_t2_price",
+)
+
+THREE_PHASE_P1_SENSOR_KEYS = frozenset(
+    {
+        "current_l2",
+        "current_l3",
+        "voltage_l2",
+        "voltage_l3",
+        "power_plus_l2",
+        "power_plus_l3",
+        "power_min_l2",
+        "power_min_l3",
+    }
 )
 
 
@@ -849,7 +862,13 @@ async def async_setup_entry(
     entry_data = hass.data[DOMAIN][entry.entry_id]
     prefix = entry_data[CONF_SENSOR_PREFIX]
     coordinator = entry_data["coordinator"]
+    grid_phases = entry_data[CONF_GRID_PHASES]
 
-    async_add_entities(
-        EvCtrlSensor(coordinator, description, prefix, entry.entry_id) for description in SENSOR_DESCRIPTIONS
-    )
+    if grid_phases == 1:
+        descriptions = (
+            description for description in SENSOR_DESCRIPTIONS if description.key not in THREE_PHASE_P1_SENSOR_KEYS
+        )
+    else:
+        descriptions = SENSOR_DESCRIPTIONS
+
+    async_add_entities(EvCtrlSensor(coordinator, description, prefix, entry.entry_id) for description in descriptions)
