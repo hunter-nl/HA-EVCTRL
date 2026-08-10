@@ -14,9 +14,12 @@ CONF_WS_URL = evctrl_const.CONF_WS_URL
 CONF_RECONNECT_INTERVAL = evctrl_const.CONF_RECONNECT_INTERVAL
 CONF_SENSOR_PREFIX = evctrl_const.CONF_SENSOR_PREFIX
 CONF_PAYLOAD_LOG_LEVEL = getattr(evctrl_const, "CONF_PAYLOAD_LOG_LEVEL", "payload_log_level")
+CONF_GRID_PHASES = evctrl_const.CONF_GRID_PHASES
 DEFAULT_RECONNECT_INTERVAL = evctrl_const.DEFAULT_RECONNECT_INTERVAL
 DEFAULT_SENSOR_PREFIX = evctrl_const.DEFAULT_SENSOR_PREFIX
 DEFAULT_PAYLOAD_LOG_LEVEL = getattr(evctrl_const, "DEFAULT_PAYLOAD_LOG_LEVEL", "off")
+DEFAULT_GRID_PHASES = evctrl_const.DEFAULT_GRID_PHASES
+GRID_PHASE_OPTIONS = evctrl_const.GRID_PHASE_OPTIONS
 PAYLOAD_LOG_LEVEL_OPTIONS = getattr(
     evctrl_const,
     "PAYLOAD_LOG_LEVEL_OPTIONS",
@@ -44,6 +47,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
             vol.Coerce(int), vol.Range(min=5, max=300)
         ),
         vol.Optional(CONF_SENSOR_PREFIX, default=DEFAULT_SENSOR_PREFIX): str,
+        vol.Optional(CONF_GRID_PHASES, default=DEFAULT_GRID_PHASES): vol.In(GRID_PHASE_OPTIONS),
     }
 )
 
@@ -68,6 +72,7 @@ class EvCtrlFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_RECONNECT_INTERVAL: user_input[CONF_RECONNECT_INTERVAL],
                         CONF_SENSOR_PREFIX: sensor_prefix or DEFAULT_SENSOR_PREFIX,
                         CONF_PAYLOAD_LOG_LEVEL: DEFAULT_PAYLOAD_LOG_LEVEL,
+                        CONF_GRID_PHASES: user_input[CONF_GRID_PHASES],
                     },
                 )
 
@@ -116,6 +121,10 @@ class EvCtrlOptionsFlowHandler(config_entries.OptionsFlow):
                     CONF_PAYLOAD_LOG_LEVEL,
                     default=self.config_entry.options.get(CONF_PAYLOAD_LOG_LEVEL, DEFAULT_PAYLOAD_LOG_LEVEL),
                 ): vol.In(PAYLOAD_LOG_LEVEL_OPTIONS),
+                vol.Optional(
+                    CONF_GRID_PHASES,
+                    default=self.config_entry.options.get(CONF_GRID_PHASES, DEFAULT_GRID_PHASES),
+                ): vol.In(GRID_PHASE_OPTIONS),
             }
         )
 
