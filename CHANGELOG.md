@@ -4,30 +4,15 @@ If you find this project useful, consider supporting its development:
 <a href="https://www.buymeacoffee.com/hunter.nl" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 # Changelog
-## [v1.0.1](https://github.com/hunter-nl/HA_EVCTRL/releases/tag/v1.0.1)
-
-
-
-### ✨ Features
-
-- [Feat: calculate session cost from HA prices](https://github.com/hunter-nl/HA_EVCTRL/pull/6) ([#6](https://github.com/hunter-nl/HA_EVCTRL/pull/6))
-
-
-
-
-
-
-
-
-
-
-## [v1.0.0](https://github.com/hunter-nl/HA_EVCTRL/releases/tag/v1.0.0)
+## [v1.1.0](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.0)
 
 
 
 ### 🐛 Fixes
 
-- [Fix: support authenticated telemetry streams](https://github.com/hunter-nl/HA_EVCTRL/pull/4) ([#4](https://github.com/hunter-nl/HA_EVCTRL/pull/4))
+- [Fix: improve entity presentation](https://github.com/hunter-nl/HA-EVCTRL/pull/11) ([#11](https://github.com/hunter-nl/HA-EVCTRL/pull/11))
+
+- [Fix: refresh license badge URL](https://github.com/hunter-nl/HA-EVCTRL/pull/10) ([#10](https://github.com/hunter-nl/HA-EVCTRL/pull/10))
 
 
 
@@ -35,13 +20,51 @@ If you find this project useful, consider supporting its development:
 
 
 
-## [v1.0.0-beta.1](https://github.com/hunter-nl/HA_EVCTRL/releases/tag/v1.0.0-beta.1)
+## [v1.0.1](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.0.1)
 
 
 
 ### ✨ Features
 
-- [Feat: refresh EV Control branding](https://github.com/hunter-nl/HA_EVCTRL/pull/2) ([#2](https://github.com/hunter-nl/HA_EVCTRL/pull/2))
+- [Feat: configure P1 grid phases](https://github.com/hunter-nl/HA-EVCTRL/pull/8) ([#8](https://github.com/hunter-nl/HA-EVCTRL/pull/8))
+
+- [Feat: calculate session cost from HA prices](https://github.com/hunter-nl/HA-EVCTRL/pull/6) ([#6](https://github.com/hunter-nl/HA-EVCTRL/pull/6))
+
+
+
+
+
+### 🐛 Fixes
+
+- [Fix: disable unused P1 phase sensors](https://github.com/hunter-nl/HA-EVCTRL/pull/9) ([#9](https://github.com/hunter-nl/HA-EVCTRL/pull/9))
+
+
+
+
+
+
+
+## [v1.0.0](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.0.0)
+
+
+
+### 🐛 Fixes
+
+- [Fix: support authenticated telemetry streams](https://github.com/hunter-nl/HA-EVCTRL/pull/4) ([#4](https://github.com/hunter-nl/HA-EVCTRL/pull/4))
+
+
+
+
+
+
+
+## [v1.0.0-beta.1](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.0.0-beta.1)
+
+
+
+### ✨ Features
+
+- [Feat: refresh EV Control branding](https://github.com/hunter-nl/HA-EVCTRL/pull/2) ([#2](https://github.com/hunter-nl/HA-EVCTRL/pull/2))
 
 
 
@@ -58,7 +81,7 @@ If you find this project useful, consider supporting its development:
 
 ### ⬆️ Dependencies
 
-- [Chore(deps):(deps): update ty requirement from >=0.0.65 to >=0.0.69 in the dependencies group](https://github.com/hunter-nl/HA_EVCTRL/pull/1) ([#1](https://github.com/hunter-nl/HA_EVCTRL/pull/1))
+- [Chore(deps):(deps): update ty requirement from >=0.0.65 to >=0.0.69 in the dependencies group](https://github.com/hunter-nl/HA-EVCTRL/pull/1) ([#1](https://github.com/hunter-nl/HA-EVCTRL/pull/1))
 
 
 
@@ -70,17 +93,17 @@ If you find this project useful, consider supporting its development:
 
 * @releases-manager[bot] made their first contribution
 
-in [#3](https://github.com/hunter-nl/HA_EVCTRL/pull/3)
+in [#3](https://github.com/hunter-nl/HA-EVCTRL/pull/3)
 
 
 * @hunter-nl made their first contribution
 
-in [#2](https://github.com/hunter-nl/HA_EVCTRL/pull/2)
+in [#2](https://github.com/hunter-nl/HA-EVCTRL/pull/2)
 
 
 * @github-actions[bot] made their first contribution
 
-in [#1](https://github.com/hunter-nl/HA_EVCTRL/pull/1)
+in [#1](https://github.com/hunter-nl/HA-EVCTRL/pull/1)
 
 
 * @dependabot[bot] made their first contribution
