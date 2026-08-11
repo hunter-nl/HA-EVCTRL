@@ -4,6 +4,20 @@ If you find this project useful, consider supporting its development:
 <a href="https://www.buymeacoffee.com/hunter.nl" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 # Changelog
+## [v1.1.1](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.1)
+
+
+
+### 🐛 Fixes
+
+- [Fix: disable L1 sensors for one-phase grids](https://github.com/hunter-nl/HA-EVCTRL/pull/13) ([#13](https://github.com/hunter-nl/HA-EVCTRL/pull/13))
+
+
+
+
+
+
+
 ## [v1.1.0](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.0)
 
 
