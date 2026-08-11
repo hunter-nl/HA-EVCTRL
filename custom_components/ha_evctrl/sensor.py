@@ -18,6 +18,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt as dt_util
 
 from .const import CONF_GRID_PHASES, CONF_SENSOR_PREFIX, DOMAIN
 from .data import EvCtrlDataUpdateCoordinator
@@ -745,6 +746,7 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         name="Session Cost",
         group=GROUP_EV_SESSION,
         device_class=SensorDeviceClass.MONETARY,
+        state_class=SensorStateClass.TOTAL,
         key_path=("Session", "Cost", "value"),
         unit_path=("Session", "Cost", "unit"),
         key_paths=(("Session", "Cost"), ("SessionCost", "value"), ("SessionCost",)),
@@ -813,6 +815,21 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
         if not isinstance(unit, str):
             return unit
         return UNIT_NORMALIZATION.get(unit, unit)
+
+    @property
+    def last_reset(self) -> datetime | None:
+        """Use the session start as the reset marker for Session Cost."""
+        if self.entity_description.key != "session_cost":
+            return None
+        session_start = self._extract_first(
+            ("Session", "Start"),
+            (("Session", "Begin"),),
+        )
+        if not isinstance(session_start, str):
+            return None
+        if (start_time := dt_util.parse_datetime(session_start)) is None:
+            return None
+        return dt_util.as_local(start_time)
 
     async def async_added_to_hass(self) -> None:
         """Refresh the session cost when one of its price helpers changes."""
