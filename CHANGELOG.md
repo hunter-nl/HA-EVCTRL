@@ -4,6 +4,25 @@ If you find this project useful, consider supporting its development:
 <a href="https://www.buymeacoffee.com/hunter.nl" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 # Changelog
+## [v1.1.2](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.2)
+
+
+
+
+
+
+### 🐛 Fixes
+
+- [Fix: keep L1 measurements enabled on one phase](https://github.com/hunter-nl/HA-EVCTRL/pull/16) ([#16](https://github.com/hunter-nl/HA-EVCTRL/pull/16))
+
+- [Fix: correct session cost state class](https://github.com/hunter-nl/HA-EVCTRL/pull/15) ([#15](https://github.com/hunter-nl/HA-EVCTRL/pull/15))
+
+
+
+
+
+
+
 ## [v1.1.1](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.1)
 
 
