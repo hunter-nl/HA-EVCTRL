@@ -747,7 +747,6 @@ SENSOR_DESCRIPTIONS: tuple[EvCtrlSensorEntityDescription, ...] = (
         name="Session Cost",
         group=GROUP_EV_SESSION,
         device_class=SensorDeviceClass.MONETARY,
-        state_class=SensorStateClass.MEASUREMENT,
         key_path=("Session", "Cost", "value"),
         unit_path=("Session", "Cost", "unit"),
         key_paths=(("Session", "Cost"), ("SessionCost", "value"), ("SessionCost",)),
