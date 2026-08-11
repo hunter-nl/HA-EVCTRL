@@ -34,10 +34,8 @@ SESSION_PRICE_ENTITY_IDS = (
 
 THREE_PHASE_P1_SENSOR_KEYS = frozenset(
     {
-        "current_l1",
         "current_l2",
         "current_l3",
-        "voltage_l1",
         "voltage_l2",
         "voltage_l3",
         "power_plus_l1",
@@ -49,11 +47,11 @@ THREE_PHASE_P1_SENSOR_KEYS = frozenset(
     }
 )
 
+ONE_PHASE_P1_SENSOR_KEYS = frozenset({"current_l1", "voltage_l1"})
+
 THREE_PHASE_P1_SENSOR_ICONS = {
-    "current_l1": "mdi:current-ac",
     "current_l2": "mdi:current-ac",
     "current_l3": "mdi:current-ac",
-    "voltage_l1": "mdi:sine-wave",
     "voltage_l2": "mdi:sine-wave",
     "voltage_l3": "mdi:sine-wave",
     "power_plus_l1": "mdi:transmission-tower-export",
@@ -971,7 +969,7 @@ async def async_setup_entry(
 def _sync_phase_entity_registry(hass, entry_id: str, grid_phases: int) -> None:
     """Keep integration-disabled phase entities aligned with the grid setting."""
     registry = er.async_get(hass)
-    for key in THREE_PHASE_P1_SENSOR_KEYS:
+    for key in THREE_PHASE_P1_SENSOR_KEYS | ONE_PHASE_P1_SENSOR_KEYS:
         unique_id = f"{entry_id}_{key}"
         entity_id = registry.async_get_entity_id("sensor", DOMAIN, unique_id)
         if entity_id is None:
@@ -979,18 +977,19 @@ def _sync_phase_entity_registry(hass, entry_id: str, grid_phases: int) -> None:
         registry_entry = registry.async_get(entity_id)
         if registry_entry is None:
             continue
-        updates: dict[str, Any] = {
-            "original_icon": THREE_PHASE_P1_SENSOR_ICONS[key],
-        }
+        updates: dict[str, Any] = {}
+        if icon := THREE_PHASE_P1_SENSOR_ICONS.get(key):
+            updates["original_icon"] = icon
         if registry_entry.name is None:
             updates["original_name"] = next(
                 description.name for description in SENSOR_DESCRIPTIONS if description.key == key
             )
-        if grid_phases == 1 and registry_entry.disabled_by is None:
+        if key in THREE_PHASE_P1_SENSOR_KEYS and grid_phases == 1 and registry_entry.disabled_by is None:
             updates["disabled_by"] = er.RegistryEntryDisabler.INTEGRATION
-        elif grid_phases == 3 and registry_entry.disabled_by is er.RegistryEntryDisabler.INTEGRATION:
+        elif registry_entry.disabled_by is er.RegistryEntryDisabler.INTEGRATION:
             updates["disabled_by"] = None
-        registry.async_update_entity(entity_id, **updates)
+        if updates:
+            registry.async_update_entity(entity_id, **updates)
 
 
 def _sync_entity_registry_icons(hass, entry_id: str) -> None:
