@@ -34,24 +34,32 @@ SESSION_PRICE_ENTITY_IDS = (
 
 THREE_PHASE_P1_SENSOR_KEYS = frozenset(
     {
+        "current_l1",
         "current_l2",
         "current_l3",
+        "voltage_l1",
         "voltage_l2",
         "voltage_l3",
+        "power_plus_l1",
         "power_plus_l2",
         "power_plus_l3",
+        "power_min_l1",
         "power_min_l2",
         "power_min_l3",
     }
 )
 
 THREE_PHASE_P1_SENSOR_ICONS = {
+    "current_l1": "mdi:current-ac",
     "current_l2": "mdi:current-ac",
     "current_l3": "mdi:current-ac",
+    "voltage_l1": "mdi:sine-wave",
     "voltage_l2": "mdi:sine-wave",
     "voltage_l3": "mdi:sine-wave",
+    "power_plus_l1": "mdi:transmission-tower-export",
     "power_plus_l2": "mdi:transmission-tower-export",
     "power_plus_l3": "mdi:transmission-tower-export",
+    "power_min_l1": "mdi:transmission-tower-import",
     "power_min_l2": "mdi:transmission-tower-import",
     "power_min_l3": "mdi:transmission-tower-import",
 }
