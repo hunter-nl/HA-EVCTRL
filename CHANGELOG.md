@@ -4,6 +4,20 @@ If you find this project useful, consider supporting its development:
 <a href="https://www.buymeacoffee.com/hunter.nl" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 # Changelog
+## [v1.1.3](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.3)
+
+
+
+### 🐛 Fixes
+
+- [Fix: restore session cost statistics](https://github.com/hunter-nl/HA-EVCTRL/pull/18) ([#18](https://github.com/hunter-nl/HA-EVCTRL/pull/18))
+
+
+
+
+
+
+
 ## [v1.1.2](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.2)
 
 
