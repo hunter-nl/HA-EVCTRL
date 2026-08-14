@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from decimal import ROUND_CEILING, Decimal, InvalidOperation
+from decimal import ROUND_CEILING, ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -962,7 +962,7 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
         if len(price_values) != len(SESSION_PRICE_ENTITY_IDS):
             return None
         average_price = (sum(price_values, Decimal(0)) / Decimal(2)).quantize(Decimal("0.01"), rounding=ROUND_CEILING)
-        return float((charge_value * average_price).quantize(Decimal("0.01"), rounding=ROUND_CEILING))
+        return float((charge_value * average_price).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
 async def async_setup_entry(
