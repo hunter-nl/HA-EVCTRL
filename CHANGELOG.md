@@ -4,6 +4,20 @@ If you find this project useful, consider supporting its development:
 <a href="https://www.buymeacoffee.com/hunter.nl" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
 
 # Changelog
+## [v1.1.4](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.4)
+
+
+
+### 🐛 Fixes
+
+- [Fix: use import prices for session cost](https://github.com/hunter-nl/HA-EVCTRL/pull/20) ([#20](https://github.com/hunter-nl/HA-EVCTRL/pull/20))
+
+
+
+
+
+
+
 ## [v1.1.3](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.1.3)
 
 
@@ -95,20 +109,6 @@ If you find this project useful, consider supporting its development:
 
 
 
-### 🐛 Fixes
-
-- [Fix: support authenticated telemetry streams](https://github.com/hunter-nl/HA-EVCTRL/pull/4) ([#4](https://github.com/hunter-nl/HA-EVCTRL/pull/4))
-
-
-
-
-
-
-
-## [v1.0.0-beta.1](https://github.com/hunter-nl/HA-EVCTRL/releases/tag/v1.0.0-beta.1)
-
-
-
 ### ✨ Features
 
 - [Feat: refresh EV Control branding](https://github.com/hunter-nl/HA-EVCTRL/pull/2) ([#2](https://github.com/hunter-nl/HA-EVCTRL/pull/2))
@@ -121,6 +121,11 @@ If you find this project useful, consider supporting its development:
 
 
 
+
+
+### 🐛 Fixes
+
+- [Fix: support authenticated telemetry streams](https://github.com/hunter-nl/HA-EVCTRL/pull/4) ([#4](https://github.com/hunter-nl/HA-EVCTRL/pull/4))
 
 
 
@@ -140,12 +145,12 @@ If you find this project useful, consider supporting its development:
 
 * @releases-manager[bot] made their first contribution
 
-in [#3](https://github.com/hunter-nl/HA-EVCTRL/pull/3)
+in [#5](https://github.com/hunter-nl/HA-EVCTRL/pull/5)
 
 
 * @hunter-nl made their first contribution
 
-in [#2](https://github.com/hunter-nl/HA-EVCTRL/pull/2)
+in [#4](https://github.com/hunter-nl/HA-EVCTRL/pull/4)
 
 
 * @github-actions[bot] made their first contribution
