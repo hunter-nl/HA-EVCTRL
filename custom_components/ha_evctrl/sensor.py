@@ -961,7 +961,7 @@ class EvCtrlSensor(CoordinatorEntity, SensorEntity):
             return None
         if len(price_values) != len(SESSION_PRICE_ENTITY_IDS):
             return None
-        average_price = sum(price_values, Decimal(0)) / Decimal(2)
+        average_price = (sum(price_values, Decimal(0)) / Decimal(2)).quantize(Decimal("0.01"), rounding=ROUND_CEILING)
         return float((charge_value * average_price).quantize(Decimal("0.01"), rounding=ROUND_CEILING))
 
 

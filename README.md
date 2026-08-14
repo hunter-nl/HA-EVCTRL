@@ -87,8 +87,10 @@ average of these Home Assistant import-price helpers:
 - `input_number.electricity_import_t1_price`
 - `input_number.electricity_import_t2_price`
 
-The result is rounded up to two decimal places. Create both helpers with a
-price per kWh in EUR before using the session-cost sensor.
+The average price is rounded up to two decimal places before it is multiplied
+by the session energy; the resulting cost is also rounded up to two decimal
+places. Create both helpers with a price per kWh in EUR before using the
+session-cost sensor.
 
 ## Entities and payloads
 
