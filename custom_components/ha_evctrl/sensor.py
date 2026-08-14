@@ -29,8 +29,8 @@ UNIT_NORMALIZATION = {
 }
 
 SESSION_PRICE_ENTITY_IDS = (
-    "input_number.electricity_export_t1_price",
-    "input_number.electricity_export_t2_price",
+    "input_number.electricity_import_t1_price",
+    "input_number.electricity_import_t2_price",
 )
 
 THREE_PHASE_P1_SENSOR_KEYS = frozenset(
