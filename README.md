@@ -82,10 +82,10 @@ The integration identifies itself to JunoBox controllers with the
 ### Session cost
 
 **Session Cost** is calculated locally from the current session charge and the
-average of these Home Assistant helpers:
+average of these Home Assistant import-price helpers:
 
-- `input_number.electricity_export_t1_price`
-- `input_number.electricity_export_t2_price`
+- `input_number.electricity_import_t1_price`
+- `input_number.electricity_import_t2_price`
 
 The result is rounded up to two decimal places. Create both helpers with a
 price per kWh in EUR before using the session-cost sensor.
